@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Artem Akhmadeev](https://up.htmlacademy.ru/javascript/18/user/108519).
-* Наставник: `Неизвестно`.
+* Наставник: [Павел Фанасков](https://htmlacademy.ru/profile/id615993).
 
 ---
 
