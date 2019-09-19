@@ -28,13 +28,13 @@ var randomArrayItem = function (arr) {
 
 var getRandomArray = function (arr) {
   var length = getRandomNumber(1, arr.length);
-  var features = [];
+  var array = [];
 
   for (var i = 0; i < length; i++) {
-    features.push(arr[i]);
+    array.push(arr[i]);
   }
 
-  return features;
+  return array;
 };
 
 var genOffers = function (total, obj, width, min, max) {
@@ -70,4 +70,34 @@ var genOffers = function (total, obj, width, min, max) {
   return offers;
 };
 
+var getPinLocation = function (obj) {
+  var left = obj.location.x - 24;
+  var top = obj.location.y - 70;
+  return 'left: ' + left + 'px; top: ' + top + 'px';
+};
+
+var renderPin = function (obj) {
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+  var pin = pinTemplate.cloneNode(true);
+
+  pin.style = getPinLocation(obj);
+  pin.querySelector('img').src = obj.author.avatar;
+  pin.querySelector('img').alt = obj.offer.title;
+
+  return pin;
+};
+
+var renderPinList = function (offers) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < offers.length; i++) {
+    fragment.appendChild(renderPin(offers[i]));
+  }
+
+  document.querySelector('.map__pins').appendChild(fragment);
+};
+
 document.querySelector('.map').classList.remove('map--faded');
+var offers = genOffers(OFFER_AMOUNT, offerParams, MAP_WIDTH, LOCATION_Y_MIN, LOCATION_Y_MAX);
+
+renderPinList(offers);
