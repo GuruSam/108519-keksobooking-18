@@ -1,9 +1,15 @@
 'use strict';
 
-var MAP_WIDTH = 1200;
-var LOCATION_Y_MIN = 130;
-var LOCATION_Y_MAX = 630;
-var OFFER_AMOUNT = 8;
+var MAP = {
+  width: 1200,
+  minY: 130,
+  maxY: 630,
+  offerAmount: 8,
+  pin: {
+    width: 50,
+    height: 70
+  }
+};
 
 var offerParams = {
   types: ['palace', 'flat', 'house', 'bungalo'],
@@ -37,18 +43,18 @@ var getRandomArray = function (arr) {
   return array;
 };
 
-var genOffers = function (total, obj, width, min, max) {
+var genOffers = function (obj, map) {
   var offers = [];
 
-  for (var i = 1; i <= total; i++) {
+  for (var i = 1; i <= map.offerAmount; i++) {
     var ad = {};
 
     ad.author = {};
     ad.offer = {};
     ad.location = {};
 
-    ad.location.x = getRandomNumber(1, width);
-    ad.location.y = getRandomNumber(min, max);
+    ad.location.x = getRandomNumber(1, map.width);
+    ad.location.y = getRandomNumber(map.minY, map.maxY);
 
     ad.author.avatar = 'img/avatars/user0' + i + '.png';
 
@@ -70,34 +76,34 @@ var genOffers = function (total, obj, width, min, max) {
   return offers;
 };
 
-var getPinLocation = function (obj) {
-  var x = obj.location.x - 24;
-  var y = obj.location.y - 70;
+var getPinLocation = function (location, pin) {
+  var x = location.x - pin.width / 2 - 1;
+  var y = location.y - pin.height;
   return 'left: ' + x + 'px; top: ' + y + 'px';
 };
 
-var renderPin = function (obj) {
+var renderPin = function (obj, pinParams) {
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var pin = pinTemplate.cloneNode(true);
+  var pinElement = pinTemplate.cloneNode(true);
 
-  pin.style = getPinLocation(obj);
-  pin.querySelector('img').src = obj.author.avatar;
-  pin.querySelector('img').alt = obj.offer.title;
+  pinElement.style = getPinLocation(obj.location, pinParams);
+  pinElement.querySelector('img').src = obj.author.avatar;
+  pinElement.querySelector('img').alt = obj.offer.title;
 
-  return pin;
+  return pinElement;
 };
 
-var renderPinList = function (offers) {
+var renderPinList = function (offers, map) {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < offers.length; i++) {
-    fragment.appendChild(renderPin(offers[i]));
+    fragment.appendChild(renderPin(offers[i], map.pin));
   }
 
   document.querySelector('.map__pins').appendChild(fragment);
 };
 
 document.querySelector('.map').classList.remove('map--faded');
-var offers = genOffers(OFFER_AMOUNT, offerParams, MAP_WIDTH, LOCATION_Y_MIN, LOCATION_Y_MAX);
+var offers = genOffers(offerParams, MAP);
 
-renderPinList(offers);
+renderPinList(offers, MAP);
