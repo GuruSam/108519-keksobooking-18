@@ -82,8 +82,7 @@ var getPinLocation = function (location, pin) {
   return 'left: ' + x + 'px; top: ' + y + 'px';
 };
 
-var renderPin = function (obj, pinParams) {
-  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var renderPin = function (obj, pinTemplate, pinParams) {
   var pinElement = pinTemplate.cloneNode(true);
 
   pinElement.style = getPinLocation(obj.location, pinParams);
@@ -95,9 +94,10 @@ var renderPin = function (obj, pinParams) {
 
 var renderPinList = function (offers, map) {
   var fragment = document.createDocumentFragment();
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   for (var i = 0; i < offers.length; i++) {
-    fragment.appendChild(renderPin(offers[i], map.pin));
+    fragment.appendChild(renderPin(offers[i], pinTemplate, map.pin));
   }
 
   document.querySelector('.map__pins').appendChild(fragment);
