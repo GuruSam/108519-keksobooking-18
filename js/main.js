@@ -21,7 +21,7 @@ var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * ((max + 1) - min) + min);
 };
 
-var randomArrayItem = function (arr) {
+var getRandomArrayItem = function (arr) {
   var i = Math.floor(Math.random() * arr.length);
   return arr[i];
 };
@@ -52,14 +52,14 @@ var genOffers = function (total, obj, width, min, max) {
 
     ad.author.avatar = 'img/avatars/user0' + i + '.png';
 
-    ad.offer.title = randomArrayItem(obj.titles);
+    ad.offer.title = getRandomArrayItem(obj.titles);
     ad.offer.address = ad.location.x + ', ' + ad.location.y;
     ad.offer.price = obj.price;
-    ad.offer.type = randomArrayItem(obj.types);
+    ad.offer.type = getRandomArrayItem(obj.types);
     ad.offer.rooms = getRandomNumber(1, obj.rooms);
     ad.offer.guests = getRandomNumber(1, obj.guests);
-    ad.offer.checkin = randomArrayItem(obj.checkTimes);
-    ad.offer.checkout = randomArrayItem(obj.checkTimes);
+    ad.offer.checkin = getRandomArrayItem(obj.checkTimes);
+    ad.offer.checkout = getRandomArrayItem(obj.checkTimes);
     ad.offer.features = getRandomArray(obj.features);
     ad.offer.description = obj.description;
     ad.offer.photos = getRandomArray(obj.photos);
@@ -71,9 +71,9 @@ var genOffers = function (total, obj, width, min, max) {
 };
 
 var getPinLocation = function (obj) {
-  var left = obj.location.x - 24;
-  var top = obj.location.y - 70;
-  return 'left: ' + left + 'px; top: ' + top + 'px';
+  var x = obj.location.x - 24;
+  var y = obj.location.y - 70;
+  return 'left: ' + x + 'px; top: ' + y + 'px';
 };
 
 var renderPin = function (obj) {
