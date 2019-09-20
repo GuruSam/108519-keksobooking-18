@@ -82,10 +82,10 @@ var getPinLocation = function (location, pin) {
   return 'left: ' + x + 'px; top: ' + y + 'px';
 };
 
-var renderPin = function (obj, pinTemplate, pinParams) {
-  var pinElement = pinTemplate.cloneNode(true);
+var renderPin = function (obj, template, params) {
+  var pinElement = template.cloneNode(true);
 
-  pinElement.style = getPinLocation(obj.location, pinParams);
+  pinElement.style = getPinLocation(obj.location, params);
   pinElement.querySelector('img').src = obj.author.avatar;
   pinElement.querySelector('img').alt = obj.offer.title;
 
