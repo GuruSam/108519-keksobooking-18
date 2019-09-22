@@ -145,6 +145,7 @@ var renderPinList = function (offers, map) {
 };
 
 var createCard = function (cardElement, ad, params) {
+  cardElement.querySelector('.popup__avatar').src = ad.author.avatar;
   cardElement.querySelector('.popup__title').textContent = ad.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = ad.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = ad.offer.price + ' ₽/ночь';
