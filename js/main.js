@@ -1,5 +1,6 @@
 'use strict';
 
+var ENTER_KEYCODE = 13;
 var MAP = {
   width: 1200,
   minY: 130,
@@ -8,8 +9,16 @@ var MAP = {
   pin: {
     width: 50,
     height: 70
+  },
+  selfPin: {
+    width: 65,
+    height: 65,
+    arrow: 15
   }
 };
+
+/*
+Неактуально до следующего этапа ТЗ
 
 var offerParams = {
   types: {
@@ -167,10 +176,85 @@ var renderCard = function (offers, params) {
 
   fragment.appendChild(createCard(cardElement, offers[0], params));
   document.querySelector('.map').insertBefore(fragment, document.querySelector('.map__filters-container'));
+}; */
+
+var getSelfPinLocation = function (pin, map) {
+  var x = Math.floor(pin.offsetLeft + map.selfPin.width / 2 - 1);
+  var y = Math.floor(pin.offsetTop + map.selfPin.height / 2);
+  var mapElement = document.querySelector('.map');
+
+  if (!mapElement.classList.contains('map--faded')) {
+    y += Math.floor(map.selfPin.height / 2 + map.selfPin.arrow);
+  }
+
+  return x + ', ' + y;
 };
 
-document.querySelector('.map').classList.remove('map--faded');
-var offers = genOffers(offerParams, MAP);
+var activatePage = function (pin) {
+  var formFields = document.querySelectorAll('fieldset, select');
 
-renderPinList(offers, MAP);
-renderCard(offers, offerParams);
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+
+  for (var i = 0; i < formFields.length; i++) {
+    formFields[i].removeAttribute('disabled');
+  }
+
+  setAddress(pin);
+};
+
+var deactivatePage = function (pin) {
+  var formFields = document.querySelectorAll('fieldset, select');
+
+  document.querySelector('.map').classList.add('map--faded');
+  document.querySelector('.ad-form').classList.add('ad-form--disabled');
+
+  for (var i = 0; i < formFields.length; i++) {
+    formFields[i].setAttribute('disabled', '');
+  }
+
+  setAddress(pin);
+};
+
+var setAddress = function (pin) {
+  var address = getSelfPinLocation(pin, MAP);
+  document.querySelector('input[name="address"]').value = address;
+};
+
+var checkCapacity = function (roomSelect, capacitySelect) {
+  var capacityPattern = {
+    1: ['1'],
+    2: ['1', '2'],
+    3: ['1', '2', '3'],
+    100: ['0']
+  };
+
+  var roomAmount = roomSelect.querySelector('option:checked').value;
+  var guestCapacity = capacitySelect.querySelector('option:checked');
+  var roomCapacity = capacityPattern[roomAmount];
+  var errorMessage = roomCapacity.includes(guestCapacity.value) ? '' : 'Количество комнат не подходит: ' + guestCapacity.textContent;
+
+  capacitySelect.setCustomValidity(errorMessage);
+};
+
+var onSelectChange = function () {
+  checkCapacity(roomSelect, guestSelect);
+};
+
+var pin = document.querySelector('.map__pin--main');
+var roomSelect = document.querySelector('#room_number');
+var guestSelect = document.querySelector('#capacity');
+
+pin.addEventListener('mousedown', function () {
+  activatePage(pin);
+});
+pin.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    activatePage(pin);
+  }
+});
+
+roomSelect.addEventListener('change', onSelectChange);
+guestSelect.addEventListener('change', onSelectChange);
+
+deactivatePage(pin);
