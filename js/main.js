@@ -165,12 +165,12 @@ var removeCard = function (card) {
   document.removeEventListener('keydown', onPopupEscPress);
 };
 
-var renderPin = function (ad, template, params) {
+var renderPin = function (offer, template, pinParams) {
   var pinElement = template.cloneNode(true);
 
-  pinElement.style = getPinLocation(ad.location, params);
-  pinElement.querySelector('img').src = ad.author.avatar;
-  pinElement.querySelector('img').alt = ad.offer.title;
+  pinElement.style = getPinLocation(offer.location, pinParams);
+  pinElement.querySelector('img').src = offer.author.avatar;
+  pinElement.querySelector('img').alt = offer.offer.title;
 
   return pinElement;
 };
