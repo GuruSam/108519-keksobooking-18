@@ -28,37 +28,24 @@
     arrow: 15
   };
 
-  var mapOverlay = document.querySelector('.map__overlay');
-  /**
-   * Доступное поле для перемещения метки.
-   */
-  var pinField = {
-    minX: mapOverlay.offsetLeft - selfPinParams.width / 2,
-    maxX: mapOverlay.offsetLeft + Map.width - selfPinParams.width / 2,
-    minY: mapOverlay.offsetTop + Map.minY - selfPinParams.height / 2,
-    maxY: mapOverlay.offsetTop + Map.maxY
+  var getRandomNumber = function (min, max) {
+    return Math.floor(Math.random() * ((max + 1) - min) + min);
   };
 
-  var togglePageState = function () {
-    var map = document.querySelector('.map');
-    var adForm = document.querySelector('.ad-form');
+  var getRandomArrayItem = function (arr) {
+    var i = Math.floor(Math.random() * arr.length);
+    return arr[i];
+  };
 
-    if (window.pageActive) {
-      map.classList.add('map--faded');
-      adForm.classList.add('ad-form--disabled');
-      window.pageActive = false;
+  var getRandomArray = function (arr) {
+    var length = getRandomNumber(1, arr.length);
+    var array = [];
 
-      window.form.toggleFormsState();
-    } else {
-      map.classList.remove('map--faded');
-      adForm.classList.remove('ad-form--disabled');
-      window.pageActive = true;
-
-      window.form.toggleFormsState();
-      window.pin.renderList();
+    for (var i = 0; i < length; i++) {
+      array.push(arr[i]);
     }
 
-    window.form.setAddress();
+    return array;
   };
 
   window.util = {
@@ -67,9 +54,9 @@
     map: Map,
     pin: pinParams,
     selfPin: selfPinParams,
-    pinField: pinField,
-    togglePageState: togglePageState,
+    getRandomNumber: getRandomNumber,
+    getRandomArray: getRandomArray,
+    getRandomArrayItem: getRandomArrayItem,
   };
-  window.pageActive = false;
 })();
 

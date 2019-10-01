@@ -2,6 +2,17 @@
 
 (function () {
   var mainPin = document.querySelector('.map__pin--main');
+  var mapOverlay = document.querySelector('.map__overlay');
+
+  /**
+   * Доступное поле для перемещения метки.
+   */
+  var pinField = {
+    minX: mapOverlay.offsetLeft - window.util.selfPin.width / 2,
+    maxX: mapOverlay.offsetLeft + window.util.map.width - window.util.selfPin.width / 2,
+    minY: mapOverlay.offsetTop + window.util.map.minY - window.util.selfPin.height / 2,
+    maxY: mapOverlay.offsetTop + window.util.map.maxY
+  };
 
   var getPinLocation = function (location) {
     var x = location.x - window.util.pin.width / 2 - 1;
@@ -68,7 +79,7 @@
 
   mainPin.addEventListener('mousedown', function (evt) {
     if (!window.pageActive) {
-      window.util.togglePageState();
+      window.togglePageState();
     }
     evt.preventDefault();
 
@@ -85,10 +96,10 @@
         y: mainPin.offsetTop - (startCoords.y - moveEvt.clientY)
       };
 
-      newCoords.x = newCoords.x < window.util.pinField.maxX ? newCoords.x : window.util.pinField.maxX;
-      newCoords.x = newCoords.x > window.util.pinField.minX ? newCoords.x : window.util.pinField.minX;
-      newCoords.y = newCoords.y < window.util.pinField.maxY ? newCoords.y : window.util.pinField.maxY;
-      newCoords.y = newCoords.y > window.util.pinField.minY ? newCoords.y : window.util.pinField.minY;
+      newCoords.x = newCoords.x < pinField.maxX ? newCoords.x : pinField.maxX;
+      newCoords.x = newCoords.x > pinField.minX ? newCoords.x : pinField.minX;
+      newCoords.y = newCoords.y < pinField.maxY ? newCoords.y : pinField.maxY;
+      newCoords.y = newCoords.y > pinField.minY ? newCoords.y : pinField.minY;
 
       mainPin.style.top = newCoords.y + 'px';
       mainPin.style.left = newCoords.x + 'px';
@@ -110,9 +121,10 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
   mainPin.addEventListener('keydown', function (evt) {
     if (evt.keyCode === window.util.ENTER_KEYCODE && !window.pageActive) {
-      window.util.togglePageState();
+      window.togglePageState();
     }
   });
 
