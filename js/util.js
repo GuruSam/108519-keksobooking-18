@@ -28,26 +28,24 @@
     arrow: 15
   };
 
-  var togglePageState = function () {
-    var map = document.querySelector('.map');
-    var adForm = document.querySelector('.ad-form');
+  var getRandomNumber = function (min, max) {
+    return Math.floor(Math.random() * ((max + 1) - min) + min);
+  };
 
-    if (window.pageActive) {
-      map.classList.add('map--faded');
-      adForm.classList.add('ad-form--disabled');
-      window.pageActive = false;
+  var getRandomArrayItem = function (arr) {
+    var i = Math.floor(Math.random() * arr.length);
+    return arr[i];
+  };
 
-      window.form.toggleFormsState();
-    } else {
-      map.classList.remove('map--faded');
-      adForm.classList.remove('ad-form--disabled');
-      window.pageActive = true;
+  var getRandomArray = function (arr) {
+    var length = getRandomNumber(1, arr.length);
+    var array = [];
 
-      window.form.toggleFormsState();
-      window.pin.renderList();
+    for (var i = 0; i < length; i++) {
+      array.push(arr[i]);
     }
 
-    window.form.setAddress();
+    return array;
   };
 
   window.util = {
@@ -56,8 +54,9 @@
     map: Map,
     pin: pinParams,
     selfPin: selfPinParams,
-    togglePageState: togglePageState,
+    getRandomNumber: getRandomNumber,
+    getRandomArray: getRandomArray,
+    getRandomArrayItem: getRandomArrayItem,
   };
-  window.pageActive = false;
 })();
 

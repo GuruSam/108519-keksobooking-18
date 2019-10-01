@@ -68,12 +68,12 @@
 
   mainPin.addEventListener('mousedown', function () {
     if (!window.pageActive) {
-      window.util.togglePageState();
+      window.togglePageState();
     }
   });
   mainPin.addEventListener('keydown', function (evt) {
     if (evt.keyCode === window.util.ENTER_KEYCODE && !window.pageActive) {
-      window.util.togglePageState();
+      window.togglePageState();
     }
   });
 
