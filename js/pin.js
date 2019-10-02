@@ -2,6 +2,17 @@
 
 (function () {
   var mainPin = document.querySelector('.map__pin--main');
+  var mapOverlay = document.querySelector('.map__overlay');
+
+  /**
+   * Доступное поле для перемещения метки.
+   */
+  var pinField = {
+    minX: mapOverlay.offsetLeft - window.util.selfPin.width / 2,
+    maxX: mapOverlay.offsetLeft + window.util.map.width - window.util.selfPin.width / 2,
+    minY: mapOverlay.offsetTop + window.util.map.minY - window.util.selfPin.height / 2,
+    maxY: mapOverlay.offsetTop + window.util.map.maxY
+  };
 
   var getPinLocation = function (location) {
     var x = location.x - window.util.pin.width / 2 - 1;
@@ -11,7 +22,7 @@
 
   var getMainPinLocation = function () {
     var pin = document.querySelector('.map__pin--main');
-    var x = Math.floor(pin.offsetLeft + window.util.selfPin.width / 2 - 1);
+    var x = Math.floor(pin.offsetLeft + window.util.selfPin.width / 2);
     var y = Math.floor(pin.offsetTop + window.util.selfPin.height / 2);
     var mapElement = document.querySelector('.map');
 
@@ -66,11 +77,51 @@
     }
   };
 
-  mainPin.addEventListener('mousedown', function () {
+  mainPin.addEventListener('mousedown', function (evt) {
     if (!window.pageActive) {
       window.togglePageState();
     }
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var newCoords = {
+        x: mainPin.offsetLeft - (startCoords.x - moveEvt.clientX),
+        y: mainPin.offsetTop - (startCoords.y - moveEvt.clientY)
+      };
+
+      newCoords.x = newCoords.x < pinField.maxX ? newCoords.x : pinField.maxX;
+      newCoords.x = newCoords.x > pinField.minX ? newCoords.x : pinField.minX;
+      newCoords.y = newCoords.y < pinField.maxY ? newCoords.y : pinField.maxY;
+      newCoords.y = newCoords.y > pinField.minY ? newCoords.y : pinField.minY;
+
+      mainPin.style.top = newCoords.y + 'px';
+      mainPin.style.left = newCoords.x + 'px';
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      window.form.setAddress();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   });
+
   mainPin.addEventListener('keydown', function (evt) {
     if (evt.keyCode === window.util.ENTER_KEYCODE && !window.pageActive) {
       window.togglePageState();
