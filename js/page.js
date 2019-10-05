@@ -1,8 +1,14 @@
 'use strict';
 
 (function () {
+  /**
+   * Текущее состояние страницы.
+   */
   var pageActive = false;
 
+  /**
+   * Изменяет состояние страницы.
+   */
   var togglePageState = function () {
     var map = document.querySelector('.map');
     var adForm = document.querySelector('.ad-form');
@@ -24,6 +30,14 @@
 
     window.form.setAddress();
   };
+
+  window.addEventListener('load', function () {
+    window.form.toggleFormsState();
+    window.form.setAddress();
+    window.backend.load(function (data) {
+      window.offers = data;
+    });
+  });
 
   window.pageActive = pageActive;
   window.togglePageState = togglePageState;

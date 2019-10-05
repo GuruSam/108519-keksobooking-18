@@ -78,11 +78,6 @@
     selectElements[i].addEventListener('change', onSelectChange);
   }
 
-  window.addEventListener('load', function () {
-    toggleFormsState();
-    setAddress();
-  });
-
   window.form = {
     setAddress: setAddress,
     toggleFormsState: toggleFormsState
