@@ -44,16 +44,23 @@
   };
 
   var renderPinList = function () {
-    var fragment = document.createDocumentFragment();
-    var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-    var pinContainer = document.querySelector('.map__pins');
+    if (window.offers) {
+      var fragment = document.createDocumentFragment();
+      var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+      var pinContainer = document.querySelector('.map__pins');
 
-    for (var i = 0; i < window.offers.length; i++) {
-      fragment.appendChild(renderPin(window.offers[i], pinTemplate));
+      for (var i = 0; i < window.offers.length; i++) {
+        fragment.appendChild(renderPin(window.offers[i], pinTemplate));
+      }
+
+      document.querySelector('.map__pins').appendChild(fragment);
+      pinContainer.addEventListener('click', onPinClick);
+    } else {
+      window.backend.load(function (data) {
+        window.offers = data;
+        renderPinList();
+      });
     }
-
-    document.querySelector('.map__pins').appendChild(fragment);
-    pinContainer.addEventListener('click', onPinClick);
   };
 
   var onPinClick = function (evt) {
