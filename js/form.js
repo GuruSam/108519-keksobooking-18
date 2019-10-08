@@ -16,7 +16,7 @@
   };
 
   var setAddress = function () {
-    var address = window.pin.getMainPinLocation();
+    var address = window.mainPin.getLocation();
     document.querySelector('input[name="address"]').value = address;
   };
 
@@ -77,6 +77,11 @@
   for (var i = 0; i < selectElements.length; i++) {
     selectElements[i].addEventListener('change', onSelectChange);
   }
+
+  document.querySelector('.ad-form__submit').addEventListener('click', function (evt) {
+    evt.preventDefault();
+    window.page.deactivate();
+  });
 
   window.form = {
     setAddress: setAddress,
