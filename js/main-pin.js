@@ -35,6 +35,16 @@
   };
 
   /**
+   * Ограничивает перемещение метки вне карты.
+   *
+   * @param {Object} coords
+   */
+  var checkPinField = function (coords) {
+    coords.x = Math.max(Math.min(coords.x, pinField.maxX), pinField.minX);
+    coords.y = Math.max(Math.min(coords.y, pinField.maxY), pinField.minY);
+  };
+
+  /**
    * Текущая координата перетаскиваемой метки.
    *
    * @return {string}
@@ -77,10 +87,7 @@
         y: mainPin.offsetTop - (startCoords.y - moveEvt.clientY)
       };
 
-      newCoords.x = newCoords.x < pinField.maxX ? newCoords.x : pinField.maxX;
-      newCoords.x = newCoords.x > pinField.minX ? newCoords.x : pinField.minX;
-      newCoords.y = newCoords.y < pinField.maxY ? newCoords.y : pinField.maxY;
-      newCoords.y = newCoords.y > pinField.minY ? newCoords.y : pinField.minY;
+      checkPinField(newCoords);
 
       mainPin.style.top = newCoords.y + 'px';
       mainPin.style.left = newCoords.x + 'px';
