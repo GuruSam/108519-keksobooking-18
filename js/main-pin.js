@@ -104,7 +104,7 @@
   });
 
   mainPin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === window.util.ENTER_KEYCODE) {
+    if (window.util.isEnterPressed(evt)) {
       window.page.activate();
     }
   });

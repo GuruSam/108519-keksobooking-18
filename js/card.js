@@ -89,7 +89,7 @@
   };
 
   var onPopupEscPress = function (evt) {
-    if (evt.keyCode === window.util.ESC_KEYCODE) {
+    if (window.util.isEscPressed(evt)) {
       var cardElement = document.querySelector('.map > .map__card');
       removeCard(cardElement);
     }

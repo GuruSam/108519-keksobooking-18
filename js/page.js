@@ -11,9 +11,11 @@
       map.classList.remove('map--faded');
       adForm.classList.remove('ad-form--disabled');
 
+      window.backend.load(function (data) {
+        window.offers = data;
+        window.pin.renderList();
+      });
       window.form.toggleFormsState();
-      window.form.setAddress();
-      window.pin.renderList();
     }
   };
 
@@ -25,19 +27,15 @@
       adForm.classList.add('ad-form--disabled');
       adForm.reset();
 
-      window.form.toggleFormsState();
       window.pin.removeList();
       window.card.remove();
       window.mainPin.reset();
+      window.form.toggleFormsState();
     }
   };
 
   window.addEventListener('load', function () {
     window.form.toggleFormsState();
-    window.form.setAddress();
-    window.backend.load(function (data) {
-      window.offers = data;
-    });
   });
 
   window.page = {

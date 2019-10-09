@@ -2,6 +2,7 @@
 
 (function () {
   var selectElements = document.querySelectorAll('#room_number, #capacity, #type, #timein, #timeout');
+  var form = document.querySelector('.ad-form');
 
   var onSelectChange = function (evt) {
     if (evt.target.id === 'room_number' || evt.target.id === 'capacity') {
@@ -60,8 +61,8 @@
   };
 
   var toggleFormsState = function () {
-    var form = document.querySelector('.ad-form');
     var formFields = document.querySelectorAll('fieldset, select');
+    setAddress();
 
     if (form.classList.contains('ad-form--disabled')) {
       for (var i = 0; i < formFields.length; i++) {
@@ -78,9 +79,12 @@
     selectElements[i].addEventListener('change', onSelectChange);
   }
 
-  document.querySelector('.ad-form__submit').addEventListener('click', function (evt) {
+  form.querySelector('.ad-form__submit').addEventListener('click', function (evt) {
     evt.preventDefault();
-    window.page.deactivate();
+    form.checkValidity();
+    if (form.reportValidity()) {
+      window.backend.save(new FormData(form));
+    }
   });
 
   window.form = {
