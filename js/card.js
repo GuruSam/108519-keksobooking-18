@@ -72,9 +72,14 @@
     document.addEventListener('keydown', onPopupEscPress);
   };
 
-  var removeCard = function (card) {
-    card.remove();
-    card.querySelector('.popup__close').removeEventListener('click', onPopupCloseClick);
+  var removeCard = function () {
+    var cardElement = document.querySelector('.map > .map__card');
+
+    if (cardElement) {
+      cardElement.remove();
+      cardElement.querySelector('.popup__close').removeEventListener('click', onPopupCloseClick);
+    }
+
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
@@ -84,7 +89,7 @@
   };
 
   var onPopupEscPress = function (evt) {
-    if (evt.keyCode === window.util.ESC_KEYCODE) {
+    if (window.util.isEscPressed(evt)) {
       var cardElement = document.querySelector('.map > .map__card');
       removeCard(cardElement);
     }
