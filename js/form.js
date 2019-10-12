@@ -2,7 +2,7 @@
 
 (function () {
   var selectElements = document.querySelectorAll('#room_number, #capacity, #type, #timein, #timeout');
-  var form = document.querySelector('.ad-form');
+  var adForm = document.querySelector('.ad-form');
 
   var onSelectChange = function (evt) {
     if (evt.target.id === 'room_number' || evt.target.id === 'capacity') {
@@ -64,7 +64,7 @@
     var formFields = document.querySelectorAll('fieldset, select');
     setAddress();
 
-    if (form.classList.contains('ad-form--disabled')) {
+    if (adForm.classList.contains('ad-form--disabled')) {
       for (var i = 0; i < formFields.length; i++) {
         formFields[i].setAttribute('disabled', '');
       }
@@ -79,16 +79,28 @@
     selectElements[i].addEventListener('change', onSelectChange);
   }
 
-  form.querySelector('.ad-form__submit').addEventListener('click', function (evt) {
+  var resetForm = function (form) {
+    form.reset();
+    window.form.setAddress();
+  };
+
+  adForm.querySelector('.ad-form__submit').addEventListener('click', function (evt) {
     evt.preventDefault();
-    form.checkValidity();
-    if (form.reportValidity()) {
-      window.backend.save(new FormData(form));
+    adForm.checkValidity();
+
+    if (adForm.reportValidity()) {
+      window.backend.save(new FormData(adForm));
     }
+  });
+
+  adForm.querySelector('.ad-form__reset').addEventListener('click', function (evt) {
+    evt.preventDefault();
+    resetForm(adForm);
   });
 
   window.form = {
     setAddress: setAddress,
-    toggleFormsState: toggleFormsState
+    toggleFormsState: toggleFormsState,
+    reset: resetForm
   };
 })();

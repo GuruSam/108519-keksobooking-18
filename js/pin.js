@@ -9,6 +9,9 @@
     height: 70
   };
 
+  var pinContainer = document.querySelector('.map__pins');
+  var filteredOffers;
+
   var getPinLocation = function (location) {
     var x = location.x - pinParams.width / 2 - 1;
     var y = location.y - pinParams.height;
@@ -25,46 +28,44 @@
     return pinElement;
   };
 
-  var renderPinList = function () {
+  var renderPinList = function (offers) {
+    filteredOffers = window.filter.maxPin(offers);
     var fragment = document.createDocumentFragment();
     var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-    var pinContainer = document.querySelector('.map__pins');
 
-    for (var i = 0; i < window.offers.length; i++) {
-      fragment.appendChild(renderPin(window.offers[i], pinTemplate));
+    if (pinContainer.children.length > 2) {
+      removePinList();
     }
+
+    filteredOffers.forEach(function (offer) {
+      fragment.appendChild(renderPin(offer, pinTemplate));
+    });
 
     document.querySelector('.map__pins').appendChild(fragment);
     pinContainer.addEventListener('click', onPinClick);
   };
 
   var removePinList = function () {
-    var pinContainer = document.querySelector('.map__pins');
     pinContainer.removeEventListener('click', onPinClick);
 
     while (pinContainer.children.length > 2) {
       pinContainer.removeChild(pinContainer.lastChild);
     }
+
+    window.card.remove();
   };
 
   var onPinClick = function (evt) {
-    var pinButtons = document.querySelectorAll('.map__pin[type="button"]');
-    var cardElement = document.querySelector('.map > .map__card');
-    var arr = [];
+    var pinElements = pinContainer.querySelectorAll('.map__pin[type="button"]');
+    var pins = Array.prototype.slice.call(pinElements);
 
-    for (var i = 0; i < pinButtons.length; i++) {
-      arr.push(pinButtons[i]);
-    }
-
-    if (cardElement) {
-      window.card.remove(cardElement);
-    }
+    window.card.remove();
 
     if (evt.target.matches('.map__pin[type="button"]')) {
-      window.card.render(window.offers[arr.indexOf(evt.target)]);
+      window.card.render(filteredOffers[pins.indexOf(evt.target)]);
     }
     if (evt.target.matches('.map__pin[type="button"] > img')) {
-      window.card.render(window.offers[arr.indexOf(evt.target.parentNode)]);
+      window.card.render(filteredOffers[pins.indexOf(evt.target.parentNode)]);
     }
   };
 
