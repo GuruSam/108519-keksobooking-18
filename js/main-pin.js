@@ -35,11 +35,21 @@
   };
 
   /**
+   * Объект с текущими координатами метки.
+   *
+   * @param {Event} evt
+   */
+  var Coordinate = function (evt) {
+    this.x = evt.clientX;
+    this.y = evt.clientY;
+  };
+
+  /**
    * Ограничивает перемещение метки вне карты.
    *
    * @param {Object} coords
    */
-  var checkPinField = function (coords) {
+  var checkForPinField = function (coords) {
     coords.x = Math.max(Math.min(coords.x, pinField.maxX), pinField.minX);
     coords.y = Math.max(Math.min(coords.y, pinField.maxY), pinField.minY);
   };
@@ -50,9 +60,8 @@
    * @return {string}
    */
   var getLocation = function () {
-    var pin = document.querySelector('.map__pin--main');
-    var x = Math.floor(pin.offsetLeft + mainPinParams.width / 2);
-    var y = Math.floor(pin.offsetTop + mainPinParams.height / 2);
+    var x = Math.floor(mainPin.offsetLeft + mainPinParams.width / 2);
+    var y = Math.floor(mainPin.offsetTop + mainPinParams.height / 2);
     var mapElement = document.querySelector('.map');
 
     if (!mapElement.classList.contains('map--faded')) {
@@ -74,10 +83,7 @@
     window.page.activate();
     evt.preventDefault();
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
+    var startCoords = new Coordinate(evt);
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
@@ -87,15 +93,12 @@
         y: mainPin.offsetTop - (startCoords.y - moveEvt.clientY)
       };
 
-      checkPinField(newCoords);
+      checkForPinField(newCoords);
 
       mainPin.style.top = newCoords.y + 'px';
       mainPin.style.left = newCoords.x + 'px';
 
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
+      startCoords = new Coordinate(moveEvt);
     };
 
     var onMouseUp = function (upEvt) {
