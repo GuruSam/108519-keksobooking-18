@@ -37,11 +37,12 @@
   /**
    * Объект с текущими координатами метки.
    *
-   * @param {Event} evt
+   * @param {Integer} x
+   * @param {Integer} y
    */
-  var Coordinate = function (evt) {
-    this.x = evt.clientX;
-    this.y = evt.clientY;
+  var Coordinate = function (x, y) {
+    this.x = x;
+    this.y = y;
   };
 
   /**
@@ -83,22 +84,22 @@
     window.page.activate();
     evt.preventDefault();
 
-    var startCoords = new Coordinate(evt);
+    var startCoords = new Coordinate(evt.clientX, evt.clientY);
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
 
-      var newCoords = {
-        x: mainPin.offsetLeft - (startCoords.x - moveEvt.clientX),
-        y: mainPin.offsetTop - (startCoords.y - moveEvt.clientY)
-      };
+      var newCoords = new Coordinate(
+          mainPin.offsetLeft - (startCoords.x - moveEvt.clientX),
+          mainPin.offsetTop - (startCoords.y - moveEvt.clientY)
+      );
 
       checkForPinField(newCoords);
 
       mainPin.style.top = newCoords.y + 'px';
       mainPin.style.left = newCoords.x + 'px';
 
-      startCoords = new Coordinate(moveEvt);
+      startCoords = new Coordinate(moveEvt.clientX, moveEvt.clientY);
     };
 
     var onMouseUp = function (upEvt) {
