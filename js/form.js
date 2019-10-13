@@ -70,13 +70,18 @@
     priceInput.placeholder = priceMap[type];
   };
 
+  /**
+   * Установка времени заезда/выезда.
+   *
+   * @param {Element} select
+   */
   var checkTimes = function (select) {
     document.querySelector('#timein').value = select.value;
     document.querySelector('#timeout').value = select.value;
   };
 
   /**
-   * Установка времени заезда/выезда.
+   * Изменение состояния формы.
    */
   var toggleFormsState = function () {
     var formFields = document.querySelectorAll('fieldset, select');
