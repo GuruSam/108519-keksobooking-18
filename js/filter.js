@@ -3,11 +3,24 @@
 (function () {
   var filterForm = document.querySelector('.map__filters');
   var filterElements = Array.prototype.slice.call(filterForm.children);
-  var housingFeatures = Array.prototype.slice.call(filterForm.querySelectorAll('input'));
+  var housingFeatures = filterForm.querySelectorAll('input');
 
   var priceMap = {
     'low': 10000,
     'high': 50000
+  };
+
+  var Filter = function () {};
+
+  Filter.prototype.set = function (key, value) {
+    key = key.split('-')[1];
+    this[key] = value;
+  };
+  Filter.prototype.setFeatures = function (feature) {
+    if (!this.features) {
+      this.features = [];
+    }
+    this.features.push(feature);
   };
 
   /**
@@ -44,14 +57,10 @@
    * @return {String}
    */
   var getPriceLevel = function (price) {
-    var priceLevel;
+    var priceLevel = price < priceMap.low ? 'low' : 'middle';
 
-    if (price < priceMap.low) {
-      priceLevel = 'low';
-    } else if (price >= priceMap.high) {
+    if (price >= priceMap.high) {
       priceLevel = 'high';
-    } else {
-      priceLevel = 'middle';
     }
 
     return priceLevel;
@@ -64,19 +73,16 @@
    * @return {Array}
    */
   var getFilterValues = function (elements) {
-    var filter = {};
+    var filter = new Filter();
 
     elements.forEach(function (el) {
-      if (el.value !== 'any' && el.tagName !== 'INPUT') {
+      if (el.value !== 'any' && el.name !== 'features') {
         var value = (el.id === 'housing-rooms' || el.id === 'housing-guests') ? parseInt(el.value, 10) : el.value;
-        filter[el.id.split('-')[1]] = value;
+        filter.set(el.id, value);
       }
 
-      if (el.tagName === 'INPUT' && el.checked) {
-        if (!filter.features) {
-          filter.features = [];
-        }
-        filter.features.push(el.value);
+      if (el.name === 'features' && el.checked) {
+        filter.setFeatures(el.value);
       }
     });
 
