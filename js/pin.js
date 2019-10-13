@@ -2,6 +2,11 @@
 
 (function () {
   /**
+   * Максимальное количество объявлений на карте.
+   */
+  var MAX_PIN_AMOUNT = 5;
+
+  /**
    * Параметры метки объявления.
    */
   var pinParams = {
@@ -29,7 +34,7 @@
   };
 
   var renderPinList = function (offers) {
-    filteredOffers = window.filter.maxPin(offers);
+    filteredOffers = offers.slice(0, MAX_PIN_AMOUNT);
     var fragment = document.createDocumentFragment();
     var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
