@@ -13,7 +13,7 @@
 
       window.backend.load(function (data) {
         window.offers = data;
-        window.pin.renderList();
+        window.pin.renderList(window.offers);
       });
       window.form.toggleFormsState();
     }
@@ -25,11 +25,11 @@
 
       map.classList.add('map--faded');
       adForm.classList.add('ad-form--disabled');
-      adForm.reset();
 
       window.pin.removeList();
       window.card.remove();
       window.mainPin.reset();
+      window.form.reset(adForm);
       window.form.toggleFormsState();
     }
   };
