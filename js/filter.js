@@ -10,19 +10,6 @@
     'high': 50000
   };
 
-  var Filter = function () {};
-
-  Filter.prototype.set = function (key, value) {
-    key = key.split('-')[1];
-    this[key] = value;
-  };
-  Filter.prototype.setFeatures = function (feature) {
-    if (!this.features) {
-      this.features = [];
-    }
-    this.features.push(feature);
-  };
-
   /**
    * Фильтрует текущие объявления по типу жилья.
    *
@@ -30,19 +17,13 @@
    */
   var filterOffers = function () {
     var offers = window.offers.slice();
-    var filterValues = getFilterValues(filterElements);
+    var filterValues = getFilterValues();
 
     for (var key in filterValues) {
       if (filterValues.hasOwnProperty(key)) {
 
         offers = offers.filter(function (offer) {
-          if (key === 'price') {
-            return filterValues[key] === getPriceLevel(offer.offer.price);
-          }
-          if (key === 'features') {
-            return compareFeatures(filterValues[key], offer.offer.features);
-          }
-          return offer.offer[key] === filterValues[key];
+          return compareValues(key, filterValues[key], offer);
         });
 
       }
@@ -72,17 +53,20 @@
    * @param {Array} elements
    * @return {Array}
    */
-  var getFilterValues = function (elements) {
-    var filter = new Filter();
+  var getFilterValues = function () {
+    var filter = {};
 
-    elements.forEach(function (el) {
+    filterElements.forEach(function (el) {
       if (el.value !== 'any' && el.name !== 'features') {
         var value = (el.id === 'housing-rooms' || el.id === 'housing-guests') ? parseInt(el.value, 10) : el.value;
-        filter.set(el.id, value);
+        filter[el.id.split('-')[1]] = value;
       }
 
       if (el.name === 'features' && el.checked) {
-        filter.setFeatures(el.value);
+        if (!filter.features) {
+          filter.features = [];
+        }
+        filter.features.push(el.value);
       }
     });
 
@@ -90,16 +74,25 @@
   };
 
   /**
-   * Сравнивает два массива.
+   * Сравнивает значение фильтра с соответствующим значением объявления.
    *
-   * @param {Array} a
-   * @param {Array} b
+   * @param {*} key
+   * @param {*} value
+   * @param {Object} offer
    * @return {Boolean}
    */
-  var compareFeatures = function (a, b) {
-    return a.every(function (feature) {
-      return b.includes(feature);
-    });
+  var compareValues = function (key, value, offer) {
+    if (Array.isArray(value)) {
+      return value.every(function (feature) {
+        return offer.offer.features.includes(feature);
+      });
+    }
+
+    if (key === 'price') {
+      return value === getPriceLevel(offer.offer.price);
+    }
+
+    return value === offer.offer[key];
   };
 
   var onFilterChange = function () {
