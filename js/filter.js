@@ -3,7 +3,7 @@
 (function () {
   var filterForm = document.querySelector('.map__filters');
   var filterElements = Array.prototype.slice.call(filterForm.children);
-  var housingFeatures = Array.prototype.slice.call(filterForm.querySelectorAll('input'));
+  var housingFeatures = filterForm.querySelectorAll('input');
 
   var priceMap = {
     'low': 10000,
