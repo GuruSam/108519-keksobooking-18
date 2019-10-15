@@ -69,7 +69,7 @@
     if (evt.target.matches('.map__pin[type="button"]')) {
       window.card.render(filteredOffers[pins.indexOf(evt.target)]);
     }
-    if (evt.target.matches('img')) {
+    if (evt.target.matches('.map__pin[type="button"] > img')) {
       window.card.render(filteredOffers[pins.indexOf(evt.target.parentNode)]);
     }
   };

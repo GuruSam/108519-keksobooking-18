@@ -119,7 +119,8 @@
 
   adForm.querySelector('.ad-form__reset').addEventListener('click', function (evt) {
     evt.preventDefault();
-    resetForm(adForm);
+    adForm.reset();
+    window.page.deactivate();
   });
 
   window.form = {

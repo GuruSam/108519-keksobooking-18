@@ -29,7 +29,6 @@
       window.pin.removeList();
       window.card.remove();
       window.mainPin.reset();
-      window.form.reset(adForm);
       window.form.toggleFormsState();
     }
   };
