@@ -30,8 +30,8 @@
   var pinField = {
     minX: mapOverlay.offsetLeft - mainPinParams.width / 2,
     maxX: mapOverlay.offsetLeft + map.width - mainPinParams.width / 2,
-    minY: mapOverlay.offsetTop + map.minY - mainPinParams.height / 2,
-    maxY: mapOverlay.offsetTop + map.maxY
+    minY: mapOverlay.offsetTop + map.minY - mainPinParams.height - mainPinParams.arrow,
+    maxY: mapOverlay.offsetTop + map.maxY - mainPinParams.height - mainPinParams.arrow
   };
 
   /**
