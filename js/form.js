@@ -113,6 +113,7 @@
 
     if (adForm.reportValidity()) {
       window.backend.save(new FormData(adForm));
+      document.querySelector('.ad-form__submit').setAttribute('disabled', '');
     }
   });
 

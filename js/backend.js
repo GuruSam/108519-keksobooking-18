@@ -51,38 +51,49 @@
     xhr.send(data);
   };
 
-  var onSaveSuccess = function () {
-    var successTemplate = document.querySelector('#success').content.querySelector('.success');
-    var successBlock = successTemplate.cloneNode(true);
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+  var successBlock = successTemplate.cloneNode(true);
 
-    successBlock.addEventListener('click', function () {
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var errorBlock = errorTemplate.cloneNode(true);
+
+  var removeBlock = function (block) {
+    if (block === successBlock) {
       successBlock.remove();
-    });
-    document.addEventListener('keydown', function (evt) {
-      if (window.util.isEscPressed(evt)) {
-        successBlock.remove();
-      }
-    });
+    } else {
+      errorBlock.remove();
+    }
+  };
+
+  var onBlockClick = function (evt) {
+    removeBlock(evt.target);
+    evt.target.removeEventListener('click', onBlockClick);
+  };
+
+  var onBlockEscPress = function (evt) {
+    if (window.util.isEscPressed(evt)) {
+      removeBlock(document.querySelector('main').lastChild);
+      evt.target.removeEventListener('keydown', onBlockEscPress);
+    }
+  };
+
+  var onSaveSuccess = function () {
+    successBlock.addEventListener('click', onBlockClick);
+    document.addEventListener('keydown', onBlockEscPress);
 
     document.querySelector('main').appendChild(successBlock);
+    document.querySelector('.ad-form__submit').removeAttribute('disabled');
     window.page.deactivate();
   };
 
   var onError = function (errorMessage) {
-    var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-    var errorBlock = errorTemplate.cloneNode(true);
-
     errorBlock.querySelector('.error__message').textContent = errorMessage;
-    errorBlock.addEventListener('click', function () {
-      errorBlock.remove();
-    });
-    document.addEventListener('keydown', function (evt) {
-      if (window.util.isEscPressed(evt)) {
-        errorBlock.remove();
-      }
-    });
+
+    errorBlock.addEventListener('click', onBlockClick);
+    document.addEventListener('keydown', onBlockEscPress);
 
     document.querySelector('main').appendChild(errorBlock);
+    document.querySelector('.ad-form__submit').removeAttribute('disabled');
   };
 
   window.backend = {
