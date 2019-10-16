@@ -1,38 +1,39 @@
 'use strict';
 
 (function () {
-  var mainPin = document.querySelector('.map__pin--main');
-  var mapOverlay = document.querySelector('.map__overlay');
-
   /**
    * Параметры карты.
    */
-  var map = {
-    width: 1200,
-    minY: 130,
-    maxY: 630,
+  var Map = {
+    WIDTH: 1200,
+    MIN_Y: 130,
+    MAX_Y: 630,
   };
 
   /**
    * Параметры перетаскиваемой метки.
    */
-  var mainPinParams = {
-    width: 65,
-    height: 65,
-    arrow: 15,
-    initialX: 570,
-    initialY: 375
+  var MainPinParams = {
+    WIDTH: 65,
+    HEIGHT: 65,
+    ARROW: 1,
+    INITIAL_X: 570,
+    INITIAL_Y: 375
   };
+
+  var mapOverlay = document.querySelector('.map__overlay');
 
   /**
    * Доступное поле для перемещения метки.
    */
-  var pinField = {
-    minX: mapOverlay.offsetLeft - mainPinParams.width / 2,
-    maxX: mapOverlay.offsetLeft + map.width - mainPinParams.width / 2,
-    minY: mapOverlay.offsetTop + map.minY - mainPinParams.height - mainPinParams.arrow,
-    maxY: mapOverlay.offsetTop + map.maxY - mainPinParams.height - mainPinParams.arrow
+  var PinField = {
+    MIN_X: mapOverlay.offsetLeft - MainPinParams.WIDTH / 2,
+    MAX_X: mapOverlay.offsetLeft + Map.WIDTH - MainPinParams.WIDTH / 2,
+    MIN_Y: mapOverlay.offsetTop + Map.MIN_Y - MainPinParams.HEIGHT - MainPinParams.ARROW,
+    MAX_Y: mapOverlay.offsetTop + Map.MAX_Y - MainPinParams.HEIGHT - MainPinParams.ARROW
   };
+
+  var mainPinButton = document.querySelector('.map__pin--main');
 
   /**
    * Объект с текущими координатами метки.
@@ -51,8 +52,8 @@
    * @param {Object} coords
    */
   var checkForPinField = function (coords) {
-    coords.x = Math.max(Math.min(coords.x, pinField.maxX), pinField.minX);
-    coords.y = Math.max(Math.min(coords.y, pinField.maxY), pinField.minY);
+    coords.x = Math.max(Math.min(coords.x, PinField.MAX_X), PinField.MIN_X);
+    coords.y = Math.max(Math.min(coords.y, PinField.MAX_Y), PinField.MIN_Y);
   };
 
   /**
@@ -61,12 +62,12 @@
    * @return {string}
    */
   var getLocation = function () {
-    var x = Math.floor(mainPin.offsetLeft + mainPinParams.width / 2);
-    var y = Math.floor(mainPin.offsetTop + mainPinParams.height / 2);
-    var mapElement = document.querySelector('.map');
+    var x = Math.floor(mainPinButton.offsetLeft + MainPinParams.WIDTH / 2);
+    var y = Math.floor(mainPinButton.offsetTop + MainPinParams.HEIGHT / 2);
+    var mapSection = document.querySelector('.map');
 
-    if (!mapElement.classList.contains('map--faded')) {
-      y += Math.floor(mainPinParams.height / 2 + mainPinParams.arrow);
+    if (!mapSection.classList.contains('map--faded')) {
+      y += Math.floor(MainPinParams.HEIGHT / 2 + MainPinParams.ARROW);
     }
 
     return x + ', ' + y;
@@ -76,11 +77,11 @@
    * Сбрасывает метку в первоначальное состояние.
    */
   var reset = function () {
-    mainPin.style.top = mainPinParams.initialY + 'px';
-    mainPin.style.left = mainPinParams.initialX + 'px';
+    mainPinButton.style.top = MainPinParams.INITIAL_Y + 'px';
+    mainPinButton.style.left = MainPinParams.INITIAL_X + 'px';
   };
 
-  mainPin.addEventListener('mousedown', function (evt) {
+  mainPinButton.addEventListener('mousedown', function (evt) {
     window.page.activate();
     evt.preventDefault();
 
@@ -88,23 +89,23 @@
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
+      window.form.setAddress();
 
       var newCoords = new Coordinate(
-          mainPin.offsetLeft - (startCoords.x - moveEvt.clientX),
-          mainPin.offsetTop - (startCoords.y - moveEvt.clientY)
+          mainPinButton.offsetLeft - (startCoords.x - moveEvt.clientX),
+          mainPinButton.offsetTop - (startCoords.y - moveEvt.clientY)
       );
 
       checkForPinField(newCoords);
 
-      mainPin.style.top = newCoords.y + 'px';
-      mainPin.style.left = newCoords.x + 'px';
+      mainPinButton.style.top = newCoords.y + 'px';
+      mainPinButton.style.left = newCoords.x + 'px';
 
       startCoords = new Coordinate(moveEvt.clientX, moveEvt.clientY);
     };
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      window.form.setAddress();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -114,7 +115,7 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  mainPin.addEventListener('keydown', function (evt) {
+  mainPinButton.addEventListener('keydown', function (evt) {
     if (window.util.isEnterPressed(evt)) {
       window.page.activate();
     }

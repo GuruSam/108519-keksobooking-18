@@ -1,9 +1,12 @@
 'use strict';
 
 (function () {
+  var DEBOUNCE_TIME = 500;
+
+  var lastTimeout;
   var filterForm = document.querySelector('.map__filters');
-  var filterElements = Array.prototype.slice.call(filterForm.children);
-  var housingFeatures = filterForm.querySelectorAll('input');
+  var filterNodes = Array.prototype.slice.call(filterForm.children);
+  var housingFeaturesNodes = filterForm.querySelectorAll('input');
 
   var priceMap = {
     'low': 10000,
@@ -67,7 +70,7 @@
   var getFilterValues = function () {
     var filter = {};
 
-    filterElements.forEach(function (el) {
+    filterNodes.forEach(function (el) {
       if (el.value !== 'any') {
         var value = (el.id === 'housing-rooms' || el.id === 'housing-guests') ? parseInt(el.value, 10) : el.value;
         filter[el.id.split('-')[1]] = value;
@@ -80,7 +83,7 @@
   var getSelectedFeatures = function () {
     var features = [];
 
-    housingFeatures.forEach(function (feature) {
+    housingFeaturesNodes.forEach(function (feature) {
       if (feature.checked) {
         features.push(feature.value);
       }
@@ -91,16 +94,23 @@
 
   var onFilterChange = function () {
     var filtered = filterOffers();
-    window.pin.renderList(filtered);
+
+    if (lastTimeout) {
+      clearTimeout(lastTimeout);
+    }
+
+    lastTimeout = setTimeout(function () {
+      window.pin.renderList(filtered);
+    }, DEBOUNCE_TIME);
   };
 
-  filterElements.splice(4, 1);
+  filterNodes.splice(4, 1);
 
-  filterElements.forEach(function (el) {
+  filterNodes.forEach(function (el) {
     el.addEventListener('change', onFilterChange);
   });
 
-  housingFeatures.forEach(function (feature) {
+  housingFeaturesNodes.forEach(function (feature) {
     feature.addEventListener('change', onFilterChange);
   });
 })();

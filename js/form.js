@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var selectElements = document.querySelectorAll('#room_number, #capacity, #type, #timein, #timeout');
+  var selectNodes = document.querySelectorAll('#room_number, #capacity, #type, #timein, #timeout');
   var adForm = document.querySelector('.ad-form');
 
   /**
@@ -24,6 +24,67 @@
     'palace': '10000'
   };
 
+  var setAddress = function () {
+    var address = window.mainPin.getLocation();
+    document.querySelector('input[name="address"]').value = address;
+  };
+
+  /**
+   * Проверка соответствия количества комнат количеству гостей.
+   */
+  var checkCapacity = function () {
+    var roomSelect = document.querySelector('#room_number');
+    var capacitySelect = document.querySelector('#capacity');
+
+    var guestCapacity = capacitySelect.querySelector('option:checked');
+    var roomCapacity = capacityPattern[roomSelect.value];
+    var errorMessage = roomCapacity.includes(guestCapacity.value) ? '' : 'Количество комнат не подходит ' + guestCapacity.textContent;
+
+    capacitySelect.setCustomValidity(errorMessage);
+  };
+
+  /**
+   * Установка минимальной цены по типу жилья.
+   */
+  var checkPrice = function () {
+    var priceInput = document.querySelector('#price');
+    var typeValue = document.querySelector('#type > option:checked').value;
+
+    priceInput.setAttribute('min', priceMap[typeValue]);
+    priceInput.placeholder = priceMap[typeValue];
+  };
+
+  /**
+   * Установка времени заезда/выезда.
+   *
+   * @param {Element} select
+   */
+  var checkTimes = function (select) {
+    document.querySelector('#timein').value = select.value;
+    document.querySelector('#timeout').value = select.value;
+  };
+
+  /**
+   * Изменение состояния форм.
+   *
+   * @param {Element} form
+   */
+  var toggleFormState = function (form) {
+    var formNodes = form.querySelectorAll('fieldset, select');
+
+    formNodes.forEach(function (node) {
+      if (node.hasAttribute('disabled')) {
+        node.removeAttribute('disabled');
+      } else {
+        node.setAttribute('disabled', '');
+      }
+    });
+
+    if (form.classList.contains('ad-form')) {
+      setAddress();
+    }
+  };
+
   var onSelectChange = function (evt) {
     switch (evt.target.id) {
       case 'room_number':
@@ -40,70 +101,20 @@
     }
   };
 
-  var setAddress = function () {
-    var address = window.mainPin.getLocation();
-    document.querySelector('input[name="address"]').value = address;
+  var onSaveSuccess = function () {
+    window.backend.showSuccessPopup();
+
+    adForm.querySelector('.ad-form__submit').removeAttribute('disabled');
+    adForm.reset();
+    window.page.deactivate();
   };
 
-  /**
-   * Проверка соответствия количества комнат количеству гостей.
-   */
-  var checkCapacity = function () {
-    var roomSelect = document.querySelector('#room_number');
-    var capacitySelect = document.querySelector('#capacity');
-
-    var guestCapacity = capacitySelect.querySelector('option:checked');
-    var roomCapacity = capacityPattern[roomSelect.querySelector('option:checked').value];
-    var errorMessage = roomCapacity.includes(guestCapacity.value) ? '' : 'Количество комнат не подходит ' + guestCapacity.textContent;
-
-    capacitySelect.setCustomValidity(errorMessage);
+  var onSaveError = function () {
+    window.backend.showErrorPopup('Не удалось сохранить объявление');
+    adForm.querySelector('.ad-form__submit').removeAttribute('disabled');
   };
 
-  /**
-   * Установка минимальной цены по типу жилья.
-   */
-  var checkPrice = function () {
-    var priceInput = document.querySelector('#price');
-    var type = document.querySelector('#type > option:checked').value;
-
-    priceInput.setAttribute('min', priceMap[type]);
-    priceInput.placeholder = priceMap[type];
-  };
-
-  /**
-   * Установка времени заезда/выезда.
-   *
-   * @param {Element} select
-   */
-  var checkTimes = function (select) {
-    document.querySelector('#timein').value = select.value;
-    document.querySelector('#timeout').value = select.value;
-  };
-
-  /**
-   * Изменение состояния формы.
-   */
-  var toggleFormsState = function () {
-    var formFields = document.querySelectorAll('fieldset, select');
-    setAddress();
-
-    if (adForm.classList.contains('ad-form--disabled')) {
-      formFields.forEach(function (field) {
-        field.setAttribute('disabled', '');
-      });
-    } else {
-      formFields.forEach(function (field) {
-        field.removeAttribute('disabled');
-      });
-    }
-  };
-
-  var resetForm = function (form) {
-    form.reset();
-    setAddress();
-  };
-
-  selectElements.forEach(function (el) {
+  selectNodes.forEach(function (el) {
     el.addEventListener('change', onSelectChange);
   });
 
@@ -112,7 +123,7 @@
     adForm.checkValidity();
 
     if (adForm.reportValidity()) {
-      window.backend.save(new FormData(adForm));
+      window.backend.request(onSaveSuccess, onSaveError, new FormData(adForm));
       document.querySelector('.ad-form__submit').setAttribute('disabled', '');
     }
   });
@@ -123,9 +134,10 @@
     window.page.deactivate();
   });
 
+  checkPrice();
+
   window.form = {
     setAddress: setAddress,
-    toggleFormsState: toggleFormsState,
-    reset: resetForm
+    toggleFormsState: toggleFormState
   };
 })();
