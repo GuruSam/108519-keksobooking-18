@@ -8,15 +8,17 @@
   var errorBlock = errorTemplate.cloneNode(true);
 
   /**
-   * Удаляет элемент со страницы.
+   * Удаляет сообщение.
    *
    * @param {Element} block
    */
   var removeBlock = function (block) {
     if (block === successBlock) {
       successBlock.remove();
+      successBlock.removeEventListener('click', onBlockClick);
     } else {
       errorBlock.remove();
+      errorBlock.removeEventListener('click', onBlockClick);
     }
   };
 
@@ -44,8 +46,7 @@
   };
 
   var onBlockClick = function (evt) {
-    removeBlock(evt.target);
-    evt.target.removeEventListener('click', onBlockClick);
+    removeBlock(evt.currentTarget);
   };
 
   var onBlockEscPress = function (evt) {
