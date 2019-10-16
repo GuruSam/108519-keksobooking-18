@@ -13,7 +13,7 @@
       adForm.classList.remove('ad-form--disabled');
 
       window.backend.request(onLoadSuccess, onLoadError);
-      window.form.toggleFormsState(adForm);
+      window.form.toggleFormState(adForm);
     }
   };
 
@@ -27,24 +27,24 @@
       window.pin.removeList();
       window.card.remove();
       window.mainPin.reset();
-      window.form.toggleFormsState(adForm);
-      window.form.toggleFormsState(filterForm);
+      window.form.toggleFormState(adForm);
+      window.form.toggleFormState(filterForm);
     }
   };
 
   var onLoadError = function () {
-    window.backend.showErrorPopup('Не удалось загрузить объявления');
+    window.popup.showError('Не удалось загрузить объявления');
   };
 
   var onLoadSuccess = function (data) {
     window.offers = data;
     window.pin.renderList(window.offers);
-    window.form.toggleFormsState(filterForm);
+    window.form.toggleFormState(filterForm);
   };
 
   window.addEventListener('load', function () {
-    window.form.toggleFormsState(adForm);
-    window.form.toggleFormsState(filterForm);
+    window.form.toggleFormState(adForm);
+    window.form.toggleFormState(filterForm);
   });
 
   window.page = {

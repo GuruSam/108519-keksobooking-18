@@ -82,6 +82,7 @@
 
     if (form.classList.contains('ad-form')) {
       setAddress();
+      window.preview.reset();
     }
   };
 
@@ -102,7 +103,7 @@
   };
 
   var onSaveSuccess = function () {
-    window.backend.showSuccessPopup();
+    window.popup.showSuccess();
 
     adForm.querySelector('.ad-form__submit').removeAttribute('disabled');
     adForm.reset();
@@ -110,12 +111,12 @@
   };
 
   var onSaveError = function () {
-    window.backend.showErrorPopup('Не удалось сохранить объявление');
+    window.popup.showError('Не удалось сохранить объявление');
     adForm.querySelector('.ad-form__submit').removeAttribute('disabled');
   };
 
-  selectNodes.forEach(function (el) {
-    el.addEventListener('change', onSelectChange);
+  selectNodes.forEach(function (select) {
+    select.addEventListener('change', onSelectChange);
   });
 
   adForm.querySelector('.ad-form__submit').addEventListener('click', function (evt) {
@@ -138,6 +139,6 @@
 
   window.form = {
     setAddress: setAddress,
-    toggleFormsState: toggleFormState
+    toggleFormState: toggleFormState
   };
 })();
