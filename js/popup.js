@@ -2,33 +2,28 @@
 
 (function () {
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
-  var successBlock = successTemplate.cloneNode(true);
+  var successPopup = successTemplate.cloneNode(true);
 
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-  var errorBlock = errorTemplate.cloneNode(true);
+  var errorPopup = errorTemplate.cloneNode(true);
 
   /**
    * Удаляет сообщение.
    *
-   * @param {Element} block
+   * @param {Element} popup
    */
-  var removeBlock = function (block) {
-    if (block === successBlock) {
-      successBlock.remove();
-      successBlock.removeEventListener('click', onBlockClick);
-    } else {
-      errorBlock.remove();
-      errorBlock.removeEventListener('click', onBlockClick);
-    }
+  var closePopup = function (popup) {
+    popup.removeEventListener('click', onPopupClick);
+    popup.remove();
   };
 
   /**
    * Показывает сообщение об успехе.
    */
   var showSuccessPopup = function () {
-    successBlock.addEventListener('click', onBlockClick);
-    document.addEventListener('keydown', onBlockEscPress);
-    document.querySelector('main').appendChild(successBlock);
+    successPopup.addEventListener('click', onPopupClick);
+    document.addEventListener('keydown', onPopupEscPress);
+    document.querySelector('main').appendChild(successPopup);
   };
 
   /**
@@ -37,22 +32,22 @@
    * @param {String} errorMessage
    */
   var showErrorPopup = function (errorMessage) {
-    errorBlock.querySelector('.error__message').textContent = errorMessage;
+    errorPopup.querySelector('.error__message').textContent = errorMessage;
 
-    errorBlock.addEventListener('click', onBlockClick);
-    document.addEventListener('keydown', onBlockEscPress);
+    errorPopup.addEventListener('click', onPopupClick);
+    document.addEventListener('keydown', onPopupEscPress);
 
-    document.querySelector('main').appendChild(errorBlock);
+    document.querySelector('main').appendChild(errorPopup);
   };
 
-  var onBlockClick = function (evt) {
-    removeBlock(evt.currentTarget);
+  var onPopupClick = function (evt) {
+    closePopup(evt.currentTarget);
   };
 
-  var onBlockEscPress = function (evt) {
+  var onPopupEscPress = function (evt) {
     if (window.util.isEscPressed(evt)) {
-      removeBlock(document.querySelector('main').lastChild);
-      document.removeEventListener('keydown', onBlockEscPress);
+      closePopup(document.querySelector('main').lastChild);
+      document.removeEventListener('keydown', onPopupEscPress);
     }
   };
 
