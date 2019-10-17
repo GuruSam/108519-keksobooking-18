@@ -3,6 +3,7 @@
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var AVATAR_PREVIEW_IMAGE = document.querySelector('.ad-form-header__preview > img').src;
+  var PHOTO_PREVIEW_SIZE = 70;
 
   var avatarChooser = document.querySelector('input[id="avatar"]');
   var avatarPreview = document.querySelector('.ad-form-header__preview > img');
@@ -13,8 +14,8 @@
   var photoPreviewTemplate = document.querySelector('.ad-form__photo');
   var imagePreviewTemplate = document.createElement('img');
 
-  imagePreviewTemplate.width = '70';
-  imagePreviewTemplate.height = '70';
+  imagePreviewTemplate.width = PHOTO_PREVIEW_SIZE;
+  imagePreviewTemplate.height = PHOTO_PREVIEW_SIZE;
 
   var onFileChooserChange = function (evt) {
     var files = Array.prototype.slice.call(evt.target.files);
