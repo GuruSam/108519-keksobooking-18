@@ -29,7 +29,7 @@
    */
   var setAddress = function () {
     var address = window.mainPin.getLocation();
-    document.querySelector('input[name="address"]').value = address;
+    document.querySelector('input[name="address"]').value = address.x + ', ' + address.y;
   };
 
   /**

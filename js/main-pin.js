@@ -59,7 +59,7 @@
   /**
    * Текущая координата перетаскиваемой метки.
    *
-   * @return {string}
+   * @return {Object}
    */
   var getLocation = function () {
     var x = Math.floor(mainPinButton.offsetLeft + MainPinParams.WIDTH / 2);
@@ -70,7 +70,7 @@
       y += Math.floor(MainPinParams.HEIGHT / 2 + MainPinParams.ARROW);
     }
 
-    return x + ', ' + y;
+    return {x: x, y: y};
   };
 
   /**
