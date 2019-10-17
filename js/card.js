@@ -138,15 +138,13 @@
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
-  var onPopupCloseClick = function (evt) {
-    var cardPopup = evt.target.parentNode;
-    removeCard(cardPopup);
+  var onPopupCloseClick = function () {
+    removeCard();
   };
 
   var onPopupEscPress = function (evt) {
     if (window.util.isEscPressed(evt)) {
-      var cardPopup = document.querySelector('.map > .map__card');
-      removeCard(cardPopup);
+      removeCard();
     }
   };
 

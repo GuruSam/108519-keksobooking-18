@@ -71,8 +71,7 @@
 
     filterNodes.forEach(function (el) {
       if (el.value !== 'any') {
-        var value = (el.id === 'housing-rooms' || el.id === 'housing-guests') ? parseInt(el.value, 10) : el.value;
-        filter[el.id.split('-')[1]] = value;
+        filter[el.id.split('-')[1]] = (el.id === 'housing-rooms' || el.id === 'housing-guests') ? parseInt(el.value, 10) : el.value;
       }
     });
 
