@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-  /**
-   * Словарь типов жилья.
-   */
   var offerTypesMap = {
     'palace': 'Дворец',
     'flat': 'Квартира',

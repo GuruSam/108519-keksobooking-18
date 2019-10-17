@@ -14,11 +14,8 @@
     HEIGHT: 70
   };
 
-  var pinContainer = document.querySelector('.map__pins');
-  var filteredOffers;
-
   /**
-   * Устанавливает расположение метки на карте.
+   * Получает расположение метки на карте.
    *
    * @param {object} location
    * @return {String}
@@ -45,6 +42,9 @@
 
     return pinButton;
   };
+
+  var pinContainer = document.querySelector('.map__pins');
+  var filteredOffers;
 
   /**
    * Отрисовывает метки на карту.

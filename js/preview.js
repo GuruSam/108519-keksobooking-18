@@ -9,6 +9,7 @@
 
   var photoContainer = document.querySelector('.ad-form__photo-container');
   var photoChooser = document.querySelector('input[id="images"]');
+
   var photoPreviewTemplate = document.querySelector('.ad-form__photo');
   var imagePreviewTemplate = document.createElement('img');
 
@@ -18,8 +19,10 @@
   var onFileChooserChange = function (evt) {
     var files = Array.prototype.slice.call(evt.target.files);
 
-    while (photoContainer.children.length > 1) {
-      photoContainer.removeChild(photoContainer.lastChild);
+    if (evt.target === photoChooser) {
+      while (photoContainer.children.length > 1) {
+        photoContainer.removeChild(photoContainer.lastChild);
+      }
     }
 
     files.forEach(function (file) {

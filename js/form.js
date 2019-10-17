@@ -24,6 +24,9 @@
     'palace': '10000'
   };
 
+  /**
+   * Устанавливает координату метки в поле адрес.
+   */
   var setAddress = function () {
     var address = window.mainPin.getLocation();
     document.querySelector('input[name="address"]').value = address;
@@ -65,7 +68,7 @@
   };
 
   /**
-   * Изменение состояния форм.
+   * Изменение состояния формы.
    *
    * @param {Element} form
    */
@@ -76,6 +79,7 @@
       if (node.hasAttribute('disabled')) {
         node.removeAttribute('disabled');
       } else {
+        form.reset();
         node.setAttribute('disabled', '');
       }
     });
@@ -106,7 +110,6 @@
     window.popup.showSuccess();
 
     adForm.querySelector('.ad-form__submit').removeAttribute('disabled');
-    adForm.reset();
     window.page.deactivate();
   };
 
@@ -131,7 +134,6 @@
 
   adForm.querySelector('.ad-form__reset').addEventListener('click', function (evt) {
     evt.preventDefault();
-    adForm.reset();
     window.page.deactivate();
   });
 

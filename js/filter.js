@@ -3,7 +3,6 @@
 (function () {
   var DEBOUNCE_TIME = 500;
 
-  var lastTimeout;
   var filterForm = document.querySelector('.map__filters');
   var filterNodes = Array.prototype.slice.call(filterForm.children);
   var housingFeaturesNodes = filterForm.querySelectorAll('input');
@@ -92,6 +91,9 @@
     return features;
   };
 
+  // Устранение дребезга
+  var lastTimeout;
+
   var onFilterChange = function () {
     var filtered = filterOffers();
 
@@ -104,7 +106,7 @@
     }, DEBOUNCE_TIME);
   };
 
-  filterNodes.splice(4, 1);
+  filterNodes.pop();
 
   filterNodes.forEach(function (el) {
     el.addEventListener('change', onFilterChange);

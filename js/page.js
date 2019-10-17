@@ -6,6 +6,9 @@
   var filterForm = document.querySelector('.map__filters');
   var pageActive = false;
 
+  /**
+   * Перевод страницы в активное состояние.
+   */
   var activatePage = function () {
     if (!pageActive) {
       pageActive = true;
@@ -17,6 +20,9 @@
     }
   };
 
+  /**
+   * Перевод страницы в неактивное состояние.
+   */
   var deactivatePage = function () {
     if (pageActive) {
       pageActive = false;
@@ -27,6 +33,7 @@
       window.pin.removeList();
       window.card.remove();
       window.mainPin.reset();
+
       window.form.toggleFormState(adForm);
       window.form.toggleFormState(filterForm);
     }
@@ -42,6 +49,7 @@
     window.form.toggleFormState(filterForm);
   };
 
+  // Отключить формы при загрузке.
   window.addEventListener('load', function () {
     window.form.toggleFormState(adForm);
     window.form.toggleFormState(filterForm);
