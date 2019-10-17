@@ -141,6 +141,6 @@
 
   window.form = {
     setAddress: setAddress,
-    toggleFormState: toggleFormState
+    toggleState: toggleFormState
   };
 })();
